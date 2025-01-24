@@ -1,0 +1,66 @@
+ye ek mini project hai isme 
+
+1. users post likh paayege 
+2. user create karege 
+3.login and register karege 
+4.logout karege 
+5.post creation karege 
+6.post like bhi karege 
+7.post delete bhi karege but jo owner hai uske liye hi 
+
+
+
+
+*working of like post
+1.make a like route in the profile.ejs page i.e:- "/like/<%= post._id" %>  
+naya route like aur uske baad uss post ki id bhi 
+2.ab app.js mai post ko like karwane k liye :- 
+app.get("/like/:id", isloggedin ,async(req,res)=>{
+    let post = await postmodel.findOne({ _id:req.params.id }).populate("user");
+    post.likes.push(req.user.userid)
+    await post.save()
+    res.redirect("/profile")
+})
+
+
+
+
+
+
+
+
+
+
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {   //destination mai ham batate hai kis folder mai jaana hai 
+    cb(null, './public/images/uploads')
+  },
+  filename: function (req, file, cb) {    //filename mai ham batate hai kis naam se mention hona hai 
+    crypto.randomBytes(12,function(err,bytes){
+       // console.log(bytes.toString("hex"));   //ye string ab hexadecimal mai aayega 
+       const fn = bytes.toString("hex")+ path.extname(file.originalname)    //path.extname bas uss file ka extension nikalega jaise pic.jpg hai toh woh sirf .jpg nikalega 
+        cb(null, fn) //ye cb function k wajah se hamara filename set hota hai 
+    })
+    //const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+   // cb(null, file.fieldname + '-' + uniqueSuffix)
+  }
+})
+
+const upload = multer({ storage: storage })
+
+
+1. path.extname(file.originalname) ---> ye basically file ka extension batayegi for example:- pic.pdf :- toh ye .pdf hai iska extension aise hi alag alag 
+extension hote hai jaise jpg,csv aise sab 
+
+
+
+
+UTILS/CONFIG FOLDER :- ye folder mai mai jo bhi functions banauga woh yaha likhuga 
+
+
+
+
+
+
